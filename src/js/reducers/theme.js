@@ -1,4 +1,4 @@
-import createReducer from './creator'
+import createReducer from './utilities'
 import cookie from 'react-cookie'
 import {CHANGE_THEME} from '../actions/types' 
 import getMuiTheme from 'material-ui/styles/getMuiTheme'

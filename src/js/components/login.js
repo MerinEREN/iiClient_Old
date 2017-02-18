@@ -15,6 +15,10 @@ class Login extends Component {
 		this.handleRequestClose = this.handleRequestClose.bind(this)
 	}
 
+	componentDidMount() {
+		this.props.fetchLoginURLs()
+	}
+
 	handleTouchTap(event) {
 		// This prevents ghost click.
 		event.preventDefault()
@@ -31,6 +35,7 @@ class Login extends Component {
 	}
 
 	render() {
+		const {loginURLs} = this.props
 		return (
 			<div>
 				<FlatButton
@@ -48,14 +53,13 @@ class Login extends Component {
 						>
 							<Menu>
 								{
-									Object.keys(this.props.loginURLs.items).map(key => (
+									Object.keys(loginURLs.items).map(key => (
 										<MenuItem 
 											key={key}
-										>
-											<a href={this.props.loginURLs.items[key]} onTouchTap={() => this.props.toggleLoginStatus()}>
+											children={<a href={loginURLs.items[key]}>
 												{key}
-											</a>
-										</MenuItem>
+											</a>}
+										/>
 									)
 									)
 								}
@@ -67,8 +71,8 @@ class Login extends Component {
 }
 
 	Login.propTypes = {
-		loginURLs: PropTypes.object.isRequired,
-		toggleLoginStatus: PropTypes.func.isRequired
+		loginURLs: PropTypes.object.isRequired, 
+		fetchLoginURLs: PropTypes.func.isRequired
 	}
 
 	export default Login

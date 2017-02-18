@@ -2,9 +2,9 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-	entry: './dev/js/index.js',
+	entry: './src/js/index.js',
 	output: {
-		path: path.join(__dirname, 'src/js'),
+		path: path.join(__dirname, 'public/js'),
 		filename: 'bundle.js'
 	},
 	watch: true,
@@ -28,7 +28,7 @@ module.exports = {
 		// Transfer Files
 		new TransferWebpackPlugin([
 			{from: 'www'},
-		], path.resolve(__dirname, 'src')), */
+		], path.resolve(__dirname, 'public')), */
 	],
 	module: {
 		loaders: [

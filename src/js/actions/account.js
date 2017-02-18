@@ -18,9 +18,12 @@ const receiveAccountDataError = makeActionCreator(
 	'error'
 )
 
-export default function fetchAccountData(hideFetchingProgress, body, url) {
-	const URL = url ? url : '/'
+export default function fetchAccountData(args, url) {
+	const URL = url || '/'
+	const as = args || {acc: null}
+	console.log(as)
 	// const headers = new Headers({'Content-Type': 'text/xml'})
+	const body = JSON.stringify({data: as})
 	const init = {
 		method: 'POST',
 		credentials: "same-origin",
@@ -38,8 +41,7 @@ export default function fetchAccountData(hideFetchingProgress, body, url) {
 			receiveAccountDataSuccess,
 			receiveAccountDataError,
 			r,
-			path,
-			hideFetchingProgress
+			path
 		))
 	}
 }

@@ -36,30 +36,29 @@ function shouldFetchDomainData(args) {
 
 function fetchDomainData(args) {
 	return dispatch => {
+		// args[0] is request action creator.
+		dispatch(args[0]())
 		// args[5] is for hiding fetch progress.
 		if(!args[5])
 			dispatch(toggleFetching())
-		// args[0] is request action creator.
-		dispatch(args[0]())
 		// args[1] is success action creators.
 		// args[2] is error action creators.
 		// args[3] is request.
 		// REMOVE IF STATEMENT BELOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if (self.fetch)
+			/* if (self.fetch)
 			console.log('fetch is supported by the browser')
 		else
 			console.log('fetch is not supported by the browser,' + 
-				'use XMLHttpRequest instead')
-		const myRequest = new Request(args[3])
+				'use XMLHttpRequest instead') */
 		// return fetch(`http://www.reddit.com/r/${subreddit}.json`)
-		return fetch(myRequest)
+		return fetch(args[3])
 			.then(response => {
 				// throw new TypeError('Hello my funny TypeError =)')
 				// args[5] is for hiding fetch progress.
 				if(!args[5])
 					dispatch(toggleFetching())
 				if (response.ok) {
-					console.log(response)
+					// console.log(response)
 					const contentType = response.headers
 						.get('content-type')
 					if (
@@ -100,10 +99,11 @@ function fetchDomainData(args) {
 						-1
 					) {
 						response.text()
-							.then(text => 
-								dispatch(args[1](JSON.
-									parse(text), 
-									Date.now()))
+							.then(text => {
+								const payload = JSON.parse(text)
+								dispatch(args[1](
+									payload.data, Date.now()))
+							}
 							)
 					}
 				} else {

@@ -1,4 +1,4 @@
-import createReducer from './creator'
+import createReducer from './utilities'
 import {TOGGLE_DRAWER, TOOGLE_FETCHING} from '../actions/types'
 
 // Case Reducers

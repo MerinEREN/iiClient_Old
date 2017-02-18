@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
+import fetchLoginURLs from '../actions/login'
 import LoginComponent from '../components/login'
-import {toggleLoginStatus} from '../actions/login'
 
 const mapStateToProps = (state) => {
 	return {
@@ -11,8 +11,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return bindActionCreators({
-		toggleLoginStatus
-	},
+		fetchLoginURLs
+	}, 
 		dispatch
 	)
 }

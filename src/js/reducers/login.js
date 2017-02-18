@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import createReducer from './creator'
+import createReducer from './utilities'
 import {
 	REQUEST_LOGIN_URLS,
 	RECEIVE_LOGIN_URLS_SUCCESS,
@@ -13,7 +13,6 @@ function requestLoginURLs(state, action) {
 		isFetching: true
 	}
 }
-
 function receiveLoginURLsSuccess(state, action) {
 	return {
 		...state,
@@ -24,7 +23,6 @@ function receiveLoginURLsSuccess(state, action) {
 		lastUpdated: action.receivedAt
 	}
 }
-
 function receiveLoginURLsError(state, action) {
 	return {
 		...state,
@@ -35,7 +33,6 @@ function receiveLoginURLsError(state, action) {
 		lastUpdated: action.receivedAt
 	}
 }
-
 function pushURLs(state, action) {
 	let allIds = [...state]
 	Object.keys(action.data).forEach(key => allIds.push(key))
@@ -57,7 +54,6 @@ const byId = createReducer(
 		RECEIVE_LOGIN_URLS_ERROR: receiveLoginURLsError
 	}
 )
-
 const allIds = createReducer(
 	[],
 	{
@@ -65,6 +61,7 @@ const allIds = createReducer(
 	}
 )
 
+// Higher-Order Reducer
 const loginURLs = combineReducers({
 	byId,
 	allIds

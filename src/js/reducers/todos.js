@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import createReducer from './creator'
+import createReducer from './utilities'
 import {ADD_NEW_TODO, EDIT_TODO, REMOVE_TODO, SAVE_TODO} from '../actions/types'
 
 // Set initial state

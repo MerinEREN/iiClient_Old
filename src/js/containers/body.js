@@ -28,6 +28,8 @@ const mapStateToProps = (state) => {
 	return {
 		theme: state.ui.selectedTheme,
 		isFetching: state.ui.isFetching,
+		acc: state.entities.account.byId.items,
+		users: state.entities.users,
 		open: state.ui.openDrawer
 	}
 }

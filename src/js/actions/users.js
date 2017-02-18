@@ -18,9 +18,11 @@ const receiveUsersDataError = makeActionCreator(
 	'error'
 )
 
-export default function fetchUsersData(body, url) {
-	const URL = url ? url : '/'
+export default function fetchUsersData(args, url) {
+	const URL = url || '/'
+	const as = args || {}
 	// const headers = new Headers({'Content-Type': 'text/xml'})
+	const body = JSON.stringify({data: as})
 	const init = {
 		method: 'POST',
 		credentials: "same-origin",

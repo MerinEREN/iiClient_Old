@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import loginURLs from './loginURLs'
+import loginURLs from './login'
 import entities from './entities'
 import ui from './ui'
 

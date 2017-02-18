@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import createReducer from './creator'
+import createReducer from './utilities'
 import {
 	REQUEST_ACCOUNT_DATA,
 	RECEIVE_ACCOUNT_DATA_SUCCESS,
@@ -15,7 +15,8 @@ function requestAccountData(state, action) {
 }
 function receiveAccountDataSuccess(state, action) {
 	let acc = {}
-	acc[action.data.account.Name] = action.data.account
+	acc = action.data.account
+	// acc[action.data.account.Name] = action.data.account
 	return {
 		...state,
 		isFetching: false,
@@ -34,6 +35,9 @@ function receiveAccountDataError(state, action) {
 		lastUpdated: action.receivedAt
 	}
 }
+/* function pushAccount(state, action) {
+	return [...state, action.data.account.Name]
+} */
 
 // Slice Reducer
 const byId = createReducer(
@@ -50,10 +54,17 @@ const byId = createReducer(
 		RECEIVE_ACCOUNT_DATA_ERROR: receiveAccountDataError
 	}
 )
+/* const allIds = createReducer(
+	[], 
+	{
+		RECEIVE_ACCOUNT_DATA_SUCCESS: pushAccount
+	}
+) */
 
 //Higher-Order Reducer
 const account = combineReducers({
-	byId
+	byId,
+	// allIds
 })
 
 export default account

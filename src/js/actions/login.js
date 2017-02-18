@@ -18,18 +18,12 @@ const receiveLoginURLsError = makeActionCreator(
 	'error'
 )
 
-export default function fetchLoginURLs(body, url) {
-	const URL = url ? url : '/'
-	// const headers = new Headers({'Content-Type': 'text/xml'})
+export default function fetchLoginURLs() {
 	const init = {
 		method: 'POST',
-		credentials: "same-origin",
-		body
-		// headers: headers,
-		// referrer: '/MerinEREN',
-		// mode: 'no-cors'
+		// credentials: "same-origin"
 	}
-	const r = new Request(URL, init)
+	const r = new Request("/", init)
 	return (dispatch, getState) => {
 		const state = getState()
 		const path = state.loginURLs.byId

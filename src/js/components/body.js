@@ -15,7 +15,7 @@ import ContentCopy from 'material-ui/svg-icons/content/content-copy'
 import Download from 'material-ui/svg-icons/file/file-download'
 import Delete from 'material-ui/svg-icons/action/delete'
 import Login  from '../containers/login'
-import Logged  from '../containers/logged'
+import Logged  from '../components/logged'
 import Toggle from 'material-ui/Toggle'
 import Divider from 'material-ui/Divider'
 
@@ -34,7 +34,9 @@ class Body extends Component {
 		this.progress = this.progress.bind(this)
 	}
 	componentDidMount() {
-		this.props.initState(this.session)
+		// console.log(this.props.params)
+		if (this.session)
+			this.props.initState(this.props.params)
 	}
 	componentWillReceiveProps(nextProps) {
 		if (!nextProps.isFetching) {
@@ -60,8 +62,15 @@ class Body extends Component {
 		}
 	}
 	render() {
-		const {theme, isFetching, open, changeTheme, toggleDrawer, children} = this
-			.props
+		const {
+			theme, 
+			isFetching, 
+			acc, 
+			open, 
+			changeTheme, 
+			toggleDrawer, 
+			children
+		} = this.props
 		return (
 			<div
 				style={{
@@ -86,13 +95,11 @@ class Body extends Component {
 						onLeftIconButtonTouchTap={() => 
 							toggleDrawer()}
 					/>
-					{
-						// Make MenuItem's dynamic
-					}
 					<Menu>
 						<MenuItem leftIcon={<RemoveRedEye />}>
 							<IndexLink
-								style={{color: theme.value.
+								style={{textDecoration: 'none', 
+									color: theme.value.
 									palette.textColor}}
 								to="/"
 								activeStyle={{
@@ -104,74 +111,60 @@ class Body extends Component {
 								Home
 							</IndexLink>
 						</MenuItem>
-						<MenuItem leftIcon={<PersonAdd />}>
-							<Link
-								style={{color: theme.value.
+						<MenuItem leftIcon={<PersonAdd />} children={<Link
+								style={{textDecoration: 'none', 
+									color: theme.value.
 									palette.textColor}}
-								to="MenuLink1"
+									to={"/accounts/" + acc.Name}
+								activeStyle={{
+									textDecoration: 
+									'none', 
+									color: '#0097a7'
+								}}
+						>Account</Link>} />
+						<MenuItem>
+							<Link
+								style={{textDecoration: 'none', 
+									color: theme.value.
+									palette.textColor}}
+									to={"/" + acc.Name + "/Demands"}
 								activeStyle={{
 									textDecoration: 
 									'none', 
 									color: '#0097a7'
 								}}
 							>
-								Share
+							Demands
 							</Link>
 						</MenuItem>
 						<MenuItem>
 							<Link
-								style={{color: theme.value.
+								style={{textDecoration: 'none', 
+									color: theme.value.
 									palette.textColor}}
-								to="MenuLink2"
-								activeStyle={{
-									textDecoration: 
-									'none', 
-									color: '#0097a7'
-								}}
-							>
-							Menu Link 2
-							</Link>
-						</MenuItem>
-						<MenuItem>
-							<Link
-								style={{color: theme.value.
-									palette.textColor}}
-								to="MenuLink3"
+									to={"/" + acc.Name + "/Offers"}
 								activeStyle={{
 									textDecoration: 
 									'none',
 									color: '#0097a7'
 								}}
 							>
-							Menu Link 3
+							Offers
 							</Link>
 						</MenuItem>
 						<MenuItem>
 							<Link
-								style={{color: theme.value.
+								style={{textDecoration: 'none', 
+									color: theme.value.
 									palette.textColor}}
-								to="MenuLink4"
+									to={"/" + acc.Name + "/ServicePacks"}
 								activeStyle={{
 									textDecoration: 
 									'none',
 									color: '#0097a7'
 								}}
 							>
-							Menu Link 4
-							</Link>
-						</MenuItem>
-						<MenuItem>
-							<Link
-								style={{color: theme.value.
-									palette.textColor}}
-								to="MenuLink5"
-								activeStyle={{
-									textDecoration: 
-									'none',
-									color: '#0097a7'
-								}}
-							>
-							Menu Link 5
+							Service Packs
 							</Link>
 						</MenuItem>
 					</Menu>
@@ -187,9 +180,10 @@ class Body extends Component {
 					<Menu>
 						<MenuItem>
 							<Link
-								style={{color: theme.value.
+								style={{textDecoration: 'none', 
+									color: theme.value.
 									palette.textColor}}
-								to="Settings"
+									to="/Settings"
 								activeStyle={{
 									textDecoration: 
 									'none',
@@ -201,10 +195,10 @@ class Body extends Component {
 						</MenuItem>
 						<MenuItem>
 							<Link
-								style={{color: theme.value.
-									palette.
-									textColor}}
-								to="Feedback"
+								style={{textDecoration: 'none', 
+									color: theme.value.
+									palette.textColor}}
+									to="/Feedback"
 								activeStyle={{
 									textDecoration: 
 									'none',
@@ -216,9 +210,10 @@ class Body extends Component {
 						</MenuItem>
 						<MenuItem>
 							<Link
-								style={{color: theme.value.
+								style={{textDecoration: 'none', 
+									color: theme.value.
 									palette.textColor}}
-								to="Help"
+									to="/Help"
 								activeStyle={{
 									textDecoration: 'none',
 									color: '#0097a7'
@@ -250,6 +245,8 @@ Body.propTypes = {
 	theme: PropTypes.object.isRequired,
 	isFetching: PropTypes.bool.isRequired,
 	open: PropTypes.bool.isRequired,
+	acc: PropTypes.object.isRequired,
+	users: PropTypes.object.isRequired,
 	initState: PropTypes.func.isRequired,
 	changeTheme: PropTypes.func.isRequired,
 	toggleDrawer: PropTypes.func.isRequired,

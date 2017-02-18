@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import createReducer from './creator'
+import createReducer from './utilities'
 import {
 	REQUEST_USERS_DATA,
 	RECEIVE_USERS_DATA_SUCCESS,
@@ -35,9 +35,7 @@ function receiveUsersDataError(state, action) {
 	}
 }
 function pushUser(state, action) {
-	let allIds = [...state]
-	allIds.push(action.data.user.UUID)
-	return allIds
+	return [...state, action.data.user.UUIDs]
 }
 
 // Slice Reducers

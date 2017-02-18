@@ -21490,7 +21490,7 @@
 	if (process.env.NODE_ENV === 'production') {
 		module.exports = __webpack_require__(179);
 	} else {
-		module.exports = __webpack_require__(835);
+		module.exports = __webpack_require__(837);
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
@@ -23717,11 +23717,11 @@
 
 	'use strict';
 
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _core = __webpack_require__(216);
 
@@ -23753,17 +23753,17 @@
 	 * @returns {function} logger middleware
 	 */
 	function createLogger() {
-	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	  var loggerOptions = _extends({}, _defaults2.default, options);
 
-	  var logger = loggerOptions.logger;
-	  var transformer = loggerOptions.transformer;
-	  var stateTransformer = loggerOptions.stateTransformer;
-	  var errorTransformer = loggerOptions.errorTransformer;
-	  var predicate = loggerOptions.predicate;
-	  var logErrors = loggerOptions.logErrors;
-	  var diffPredicate = loggerOptions.diffPredicate;
+	  var logger = loggerOptions.logger,
+	      transformer = loggerOptions.transformer,
+	      stateTransformer = loggerOptions.stateTransformer,
+	      errorTransformer = loggerOptions.errorTransformer,
+	      predicate = loggerOptions.predicate,
+	      logErrors = loggerOptions.logErrors,
+	      diffPredicate = loggerOptions.diffPredicate;
 
 	  // Return if 'console' object is not defined
 
@@ -23800,7 +23800,7 @@
 	        logEntry.prevState = stateTransformer(getState());
 	        logEntry.action = action;
 
-	        var returnedValue = undefined;
+	        var returnedValue = void 0;
 	        if (logErrors) {
 	          try {
 	            returnedValue = next(action);
@@ -23838,6 +23838,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	exports.printBuffer = printBuffer;
 
 	var _helpers = __webpack_require__(217);
@@ -23849,8 +23852,6 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 	/**
 	 * Get log level string based on supplied params
@@ -23874,40 +23875,40 @@
 	}
 
 	function defaultTitleFormatter(options) {
-	  var timestamp = options.timestamp;
-	  var duration = options.duration;
+	  var timestamp = options.timestamp,
+	      duration = options.duration;
+
 
 	  return function (action, time, took) {
 	    var parts = ['action'];
-	    if (timestamp) {
-	      parts.push('@ ' + time);
-	    }
-	    parts.push(action.type);
-	    if (duration) {
-	      parts.push('(in ' + took.toFixed(2) + ' ms)');
-	    }
+
+	    if (timestamp) parts.push('@ ' + time);
+	    parts.push(String(action.type));
+	    if (duration) parts.push('(in ' + took.toFixed(2) + ' ms)');
+
 	    return parts.join(' ');
 	  };
 	}
 
 	function printBuffer(buffer, options) {
-	  var logger = options.logger;
-	  var actionTransformer = options.actionTransformer;
-	  var _options$titleFormatt = options.titleFormatter;
-	  var titleFormatter = _options$titleFormatt === undefined ? defaultTitleFormatter(options) : _options$titleFormatt;
-	  var collapsed = options.collapsed;
-	  var colors = options.colors;
-	  var level = options.level;
-	  var diff = options.diff;
+	  var logger = options.logger,
+	      actionTransformer = options.actionTransformer,
+	      _options$titleFormatt = options.titleFormatter,
+	      titleFormatter = _options$titleFormatt === undefined ? defaultTitleFormatter(options) : _options$titleFormatt,
+	      collapsed = options.collapsed,
+	      colors = options.colors,
+	      level = options.level,
+	      diff = options.diff;
+
 
 	  buffer.forEach(function (logEntry, key) {
-	    var started = logEntry.started;
-	    var startedTime = logEntry.startedTime;
-	    var action = logEntry.action;
-	    var prevState = logEntry.prevState;
-	    var error = logEntry.error;
-	    var took = logEntry.took;
-	    var nextState = logEntry.nextState;
+	    var started = logEntry.started,
+	        startedTime = logEntry.startedTime,
+	        action = logEntry.action,
+	        prevState = logEntry.prevState,
+	        error = logEntry.error;
+	    var took = logEntry.took,
+	        nextState = logEntry.nextState;
 
 	    var nextEntry = buffer[key + 1];
 
@@ -23920,7 +23921,7 @@
 	    var formattedAction = actionTransformer(action);
 	    var isCollapsed = typeof collapsed === 'function' ? collapsed(function () {
 	      return nextState;
-	    }, action) : collapsed;
+	    }, action, logEntry) : collapsed;
 
 	    var formattedTime = (0, _helpers.formatTime)(startedTime);
 	    var titleCSS = colors.title ? 'color: ' + colors.title(formattedAction) + ';' : null;
@@ -23965,7 +23966,7 @@
 	    try {
 	      logger.groupEnd();
 	    } catch (e) {
-	      logger.log('—— log end ——');
+	      logger.log('\u2014\u2014 log end \u2014\u2014');
 	    }
 	  });
 	}
@@ -24011,6 +24012,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	// https://github.com/flitbit/diff#differences
 	var dictionary = {
 	  'E': {
@@ -24036,24 +24039,25 @@
 	}
 
 	function render(diff) {
-	  var kind = diff.kind;
-	  var path = diff.path;
-	  var lhs = diff.lhs;
-	  var rhs = diff.rhs;
-	  var index = diff.index;
-	  var item = diff.item;
+	  var kind = diff.kind,
+	      path = diff.path,
+	      lhs = diff.lhs,
+	      rhs = diff.rhs,
+	      index = diff.index,
+	      item = diff.item;
+
 
 	  switch (kind) {
 	    case 'E':
-	      return path.join('.') + ' ' + lhs + ' → ' + rhs;
+	      return [path.join('.'), lhs, '\u2192', rhs];
 	    case 'N':
-	      return path.join('.') + ' ' + rhs;
+	      return [path.join('.'), rhs];
 	    case 'D':
-	      return '' + path.join('.');
+	      return [path.join('.')];
 	    case 'A':
 	      return [path.join('.') + '[' + index + ']', item];
 	    default:
-	      return null;
+	      return [];
 	  }
 	}
 
@@ -24076,16 +24080,16 @@
 
 	      var output = render(elem);
 
-	      logger.log('%c ' + dictionary[kind].text, style(kind), output);
+	      logger.log.apply(logger, ['%c ' + dictionary[kind].text, style(kind)].concat(_toConsumableArray(output)));
 	    });
 	  } else {
-	    logger.log('—— no diff ——');
+	    logger.log('\u2014\u2014 no diff \u2014\u2014');
 	  }
 
 	  try {
 	    logger.groupEnd();
 	  } catch (e) {
-	    logger.log('—— diff end —— ');
+	    logger.log('\u2014\u2014 diff end \u2014\u2014 ');
 	  }
 	}
 	module.exports = exports['default'];
@@ -24568,7 +24572,7 @@
 	  // Deprecated options
 	  transformer: undefined
 	};
-	module.exports = exports['default'];
+	module.exports = exports["default"];
 
 /***/ },
 /* 221 */
@@ -24582,9 +24586,9 @@
 
 	var _redux = __webpack_require__(191);
 
-	var _loginURLs = __webpack_require__(222);
+	var _login = __webpack_require__(222);
 
-	var _loginURLs2 = _interopRequireDefault(_loginURLs);
+	var _login2 = _interopRequireDefault(_login);
 
 	var _entities = __webpack_require__(225);
 
@@ -24598,7 +24602,7 @@
 
 	// Root Reducer
 	var rootReducer = (0, _redux.combineReducers)({
-		loginURLs: _loginURLs2.default,
+		loginURLs: _login2.default,
 		entities: _entities2.default,
 		ui: _ui2.default
 	});
@@ -24619,9 +24623,9 @@
 
 	var _redux = __webpack_require__(191);
 
-	var _creator = __webpack_require__(223);
+	var _utilities = __webpack_require__(223);
 
-	var _creator2 = _interopRequireDefault(_creator);
+	var _utilities2 = _interopRequireDefault(_utilities);
 
 	var _types = __webpack_require__(224);
 
@@ -24635,7 +24639,6 @@
 			isFetching: true
 		});
 	}
-
 	function receiveLoginURLsSuccess(state, action) {
 		return _extends({}, state, {
 			isFetching: false,
@@ -24645,7 +24648,6 @@
 			lastUpdated: action.receivedAt
 		});
 	}
-
 	function receiveLoginURLsError(state, action) {
 		return _extends({}, state, {
 			isFetching: false,
@@ -24655,7 +24657,6 @@
 			lastUpdated: action.receivedAt
 		});
 	}
-
 	function pushURLs(state, action) {
 		var allIds = [].concat(_toConsumableArray(state));
 		Object.keys(action.data).forEach(function (key) {
@@ -24665,7 +24666,7 @@
 	}
 
 	// Slice Reducer
-	var byId = (0, _creator2.default)({
+	var byId = (0, _utilities2.default)({
 		isFetching: false,
 		didInvalidate: true,
 		items: {},
@@ -24676,11 +24677,11 @@
 		RECEIVE_LOGIN_URLS_SUCCESS: receiveLoginURLsSuccess,
 		RECEIVE_LOGIN_URLS_ERROR: receiveLoginURLsError
 	});
-
-	var allIds = (0, _creator2.default)([], {
+	var allIds = (0, _utilities2.default)([], {
 		RECEIVE_LOGIN_URLS_SUCCESS: pushURLs
 	});
 
+	// Higher-Order Reducer
 	var loginURLs = (0, _redux.combineReducers)({
 		byId: byId,
 		allIds: allIds
@@ -24708,6 +24709,34 @@
 			return state;
 		};
 	}
+
+	var updateObject = exports.updateObject = function updateObject(oldObject, newValues) {
+		// Encapsulate the idea of passing a new object as the first parameter
+		// to Object.assign to ensure we correctly copy data instead of mutating
+		return Object.assign({}, oldObject, newValues);
+	};
+
+	var updateItemInArray = exports.updateItemInArray = function updateItemInArray(array, itemId, updateItemCallback) {
+		var updatedItems = array.map(function (item) {
+			if (item.id !== itemId) {
+				// Since we only want to update one item, 
+				// preserve all others as they are now
+				return item;
+			}
+			// Use the provided callback to create an updated item
+			var updatedItem = updateItemCallback(item);
+			return updatedItem;
+		});
+		return updatedItems;
+	};
+
+	/* const newTodos = updateItemInArray(
+		state.todos, 
+		action.id, 
+		todo => {
+			return updateObject(todo, {completed : !todo.completed})
+		}
+	) */
 
 /***/ },
 /* 224 */
@@ -24793,9 +24822,9 @@
 
 	var _redux = __webpack_require__(191);
 
-	var _creator = __webpack_require__(223);
+	var _utilities = __webpack_require__(223);
 
-	var _creator2 = _interopRequireDefault(_creator);
+	var _utilities2 = _interopRequireDefault(_utilities);
 
 	var _types = __webpack_require__(224);
 
@@ -24809,7 +24838,8 @@
 	}
 	function receiveAccountDataSuccess(state, action) {
 		var acc = {};
-		acc[action.data.account.Name] = action.data.account;
+		acc = action.data.account;
+		// acc[action.data.account.Name] = action.data.account
 		return _extends({}, state, {
 			isFetching: false,
 			didInvalidate: false,
@@ -24826,9 +24856,12 @@
 			lastUpdated: action.receivedAt
 		});
 	}
+	/* function pushAccount(state, action) {
+		return [...state, action.data.account.Name]
+	} */
 
 	// Slice Reducer
-	var byId = (0, _creator2.default)({
+	var byId = (0, _utilities2.default)({
 		isFetching: false,
 		didInvalidate: true,
 		items: {},
@@ -24839,6 +24872,12 @@
 		RECEIVE_ACCOUNT_DATA_SUCCESS: receiveAccountDataSuccess,
 		RECEIVE_ACCOUNT_DATA_ERROR: receiveAccountDataError
 	});
+	/* const allIds = createReducer(
+		[], 
+		{
+			RECEIVE_ACCOUNT_DATA_SUCCESS: pushAccount
+		}
+	) */
 
 	//Higher-Order Reducer
 	var account = (0, _redux.combineReducers)({
@@ -24861,9 +24900,9 @@
 
 	var _redux = __webpack_require__(191);
 
-	var _creator = __webpack_require__(223);
+	var _utilities = __webpack_require__(223);
 
-	var _creator2 = _interopRequireDefault(_creator);
+	var _utilities2 = _interopRequireDefault(_utilities);
 
 	var _types = __webpack_require__(224);
 
@@ -24897,13 +24936,11 @@
 		});
 	}
 	function pushUser(state, action) {
-		var allIds = [].concat(_toConsumableArray(state));
-		allIds.push(action.data.user.UUID);
-		return allIds;
+		return [].concat(_toConsumableArray(state), [action.data.user.UUIDs]);
 	}
 
 	// Slice Reducers
-	var byId = (0, _creator2.default)({
+	var byId = (0, _utilities2.default)({
 		isFetching: false,
 		didInvalidate: true,
 		items: {},
@@ -24914,7 +24951,7 @@
 		RECEIVE_USERS_DATA_SUCCESS: receiveUsersDataSuccess,
 		RECEIVE_USERS_DATA_ERROR: receiveUsersDataError
 	});
-	var allIds = (0, _creator2.default)([], {
+	var allIds = (0, _utilities2.default)([], {
 		RECEIVE_USERS_DATA_SUCCESS: pushUser
 	});
 
@@ -24940,9 +24977,9 @@
 
 	var _redux = __webpack_require__(191);
 
-	var _creator = __webpack_require__(223);
+	var _utilities = __webpack_require__(223);
 
-	var _creator2 = _interopRequireDefault(_creator);
+	var _utilities2 = _interopRequireDefault(_utilities);
 
 	var _types = __webpack_require__(224);
 
@@ -24992,7 +25029,7 @@
 
 		return _extends({}, state, { children: text, editable: false });
 	}
-	var toDo = (0, _creator2.default)({}, {
+	var toDo = (0, _utilities2.default)({}, {
 		ADD_NEW_TODO: addTodo,
 		EDIT_TODO: editTodo,
 		SAVE_TODO: saveTodo
@@ -25031,13 +25068,13 @@
 	}
 
 	// Slice Reducer
-	var byId = (0, _creator2.default)(initialByIdState, {
+	var byId = (0, _utilities2.default)(initialByIdState, {
 		ADD_NEW_TODO: addTodoEntry,
 		EDIT_TODO: editTodoEntry,
 		REMOVE_TODO: removeTodoEntry,
 		SAVE_TODO: saveTodoEntry
 	});
-	var allIds = (0, _creator2.default)(initialAllIdsState, {
+	var allIds = (0, _utilities2.default)(initialAllIdsState, {
 		ADD_NEW_TODO: addTodoId,
 		Remove_TODO: removeTodoId
 	});
@@ -25107,9 +25144,9 @@
 		value: true
 	});
 
-	var _creator = __webpack_require__(223);
+	var _utilities = __webpack_require__(223);
 
-	var _creator2 = _interopRequireDefault(_creator);
+	var _utilities2 = _interopRequireDefault(_utilities);
 
 	var _reactCookie = __webpack_require__(231);
 
@@ -25201,7 +25238,7 @@
 	}
 
 	// Slice Reducer
-	var selectedTheme = (0, _creator2.default)(theme, {
+	var selectedTheme = (0, _utilities2.default)(theme, {
 		CHANGE_THEME: changeTheme
 	});
 
@@ -32792,9 +32829,9 @@
 	});
 	exports.isFetching = exports.openDrawer = undefined;
 
-	var _creator = __webpack_require__(223);
+	var _utilities = __webpack_require__(223);
 
-	var _creator2 = _interopRequireDefault(_creator);
+	var _utilities2 = _interopRequireDefault(_utilities);
 
 	var _types = __webpack_require__(224);
 
@@ -32809,10 +32846,10 @@
 	};
 
 	// Slice Reducers
-	var openDrawer = exports.openDrawer = (0, _creator2.default)(false, {
+	var openDrawer = exports.openDrawer = (0, _utilities2.default)(false, {
 		TOGGLE_DRAWER: toggleDrawer
 	});
-	var isFetching = exports.isFetching = (0, _creator2.default)(false, {
+	var isFetching = exports.isFetching = (0, _utilities2.default)(false, {
 		TOGGLE_FETCHING: toggleFetching
 	});
 
@@ -47131,7 +47168,7 @@
 	        children = _props.children;
 
 
-	    !history.getCurrentLocation ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You have provided a history object created with history v2.x or ' + 'earlier. This version of React Router is only compatible with v3 ' + 'history objects. Please upgrade to history v3.x.') : (0, _invariant2.default)(false) : void 0;
+	    !history.getCurrentLocation ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You have provided a history object created with history v4.x or v2.x ' + 'and earlier. This version of React Router is only compatible with v3 ' + 'history objects. Please change to history v3.x.') : (0, _invariant2.default)(false) : void 0;
 
 	    return (0, _createTransitionManager3.default)(history, (0, _RouteUtils.createRoutes)(routes || children));
 	  },
@@ -49662,11 +49699,11 @@
 		return value;
 	}
 
-	function sorter(input) {
+	function keysSorter(input) {
 		if (Array.isArray(input)) {
 			return input.sort();
 		} else if (typeof input === 'object') {
-			return sorter(Object.keys(input)).sort(function (a, b) {
+			return keysSorter(Object.keys(input)).sort(function (a, b) {
 				return Number(a) - Number(b);
 			}).map(function (key) {
 				return input[key];
@@ -49714,10 +49751,12 @@
 		});
 
 		return Object.keys(ret).sort().reduce(function (result, key) {
-			if (Boolean(ret[key]) && typeof ret[key] === 'object') {
-				result[key] = sorter(ret[key]);
+			var val = ret[key];
+			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+				// Sort object keys, not values
+				result[key] = keysSorter(val);
 			} else {
-				result[key] = ret[key];
+				result[key] = val;
 			}
 
 			return result;
@@ -51375,19 +51414,35 @@
 
 	var _body2 = _interopRequireDefault(_body);
 
-	var _todos = __webpack_require__(825);
+	var _todos = __webpack_require__(823);
 
 	var _todos2 = _interopRequireDefault(_todos);
 
-	var _settings = __webpack_require__(832);
+	var _account = __webpack_require__(830);
+
+	var _account2 = _interopRequireDefault(_account);
+
+	var _demands = __webpack_require__(831);
+
+	var _demands2 = _interopRequireDefault(_demands);
+
+	var _offers = __webpack_require__(832);
+
+	var _offers2 = _interopRequireDefault(_offers);
+
+	var _servicePacks = __webpack_require__(833);
+
+	var _servicePacks2 = _interopRequireDefault(_servicePacks);
+
+	var _settings = __webpack_require__(834);
 
 	var _settings2 = _interopRequireDefault(_settings);
 
-	var _feedback = __webpack_require__(833);
+	var _feedback = __webpack_require__(835);
 
 	var _feedback2 = _interopRequireDefault(_feedback);
 
-	var _help = __webpack_require__(834);
+	var _help = __webpack_require__(836);
 
 	var _help2 = _interopRequireDefault(_help);
 
@@ -51398,14 +51453,13 @@
 		_reactRouter.Route,
 		{ path: '/', component: _body2.default },
 		_react2.default.createElement(_reactRouter.IndexRoute, { component: _todos2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/MenuLink1', component: _todos2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/MenuLink2', component: _todos2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/MenuLink3', component: _todos2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/MenuLink4', component: _todos2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/MenuLink5', component: _todos2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/Settings', component: _settings2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/Feedback', component: _feedback2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/Help', component: _help2.default })
+		_react2.default.createElement(_reactRouter.Route, { path: 'Settings', component: _settings2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'Feedback', component: _feedback2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'Help', component: _help2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'accounts/(:acc)', component: _account2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'accounts/(:acc)/Demands', component: _demands2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'accounts/(:acc)/Offers', component: _offers2.default }),
+		_react2.default.createElement(_reactRouter.Route, { path: 'accounts/(:acc)/ServicePacks', component: _servicePacks2.default })
 	);
 
 	exports.default = routes;
@@ -51428,11 +51482,11 @@
 
 	var _body2 = _interopRequireDefault(_body);
 
-	var _body3 = __webpack_require__(813);
+	var _body3 = __webpack_require__(797);
 
 	var _body4 = _interopRequireDefault(_body3);
 
-	var _reactTapEventPlugin = __webpack_require__(818);
+	var _reactTapEventPlugin = __webpack_require__(816);
 
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 
@@ -51463,6 +51517,8 @@
 		return {
 			theme: state.ui.selectedTheme,
 			isFetching: state.ui.isFetching,
+			acc: state.entities.account.byId.items,
+			users: state.entities.users,
 			open: state.ui.openDrawer
 		};
 	};
@@ -51557,15 +51613,15 @@
 
 	var _login2 = _interopRequireDefault(_login);
 
-	var _logged = __webpack_require__(803);
+	var _logged = __webpack_require__(807);
 
 	var _logged2 = _interopRequireDefault(_logged);
 
-	var _Toggle = __webpack_require__(808);
+	var _Toggle = __webpack_require__(811);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
 
-	var _Divider = __webpack_require__(811);
+	var _Divider = __webpack_require__(814);
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
@@ -51599,7 +51655,8 @@
 		_createClass(Body, [{
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				this.props.initState(this.session);
+				// console.log(this.props.params)
+				if (this.session) this.props.initState(this.props.params);
 			}
 		}, {
 			key: 'componentWillReceiveProps',
@@ -51641,6 +51698,7 @@
 				var _props = this.props,
 				    theme = _props.theme,
 				    isFetching = _props.isFetching,
+				    acc = _props.acc,
 				    open = _props.open,
 				    changeTheme = _props.changeTheme,
 				    toggleDrawer = _props.toggleDrawer,
@@ -51676,7 +51734,8 @@
 								_react2.default.createElement(
 									_reactRouter.IndexLink,
 									{
-										style: { color: theme.value.palette.textColor },
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
 										to: '/',
 										activeStyle: {
 											textDecoration: 'none',
@@ -51686,20 +51745,34 @@
 									'Home'
 								)
 							),
-							_react2.default.createElement(
-								_MenuItem2.default,
-								{ leftIcon: _react2.default.createElement(_personAdd2.default, null) },
-								_react2.default.createElement(
+							_react2.default.createElement(_MenuItem2.default, { leftIcon: _react2.default.createElement(_personAdd2.default, null), children: _react2.default.createElement(
 									_reactRouter.Link,
 									{
-										style: { color: theme.value.palette.textColor },
-										to: 'MenuLink1',
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: "/accounts/" + acc.Name,
 										activeStyle: {
 											textDecoration: 'none',
 											color: '#0097a7'
 										}
 									},
-									'Share'
+									'Account'
+								) }),
+							_react2.default.createElement(
+								_MenuItem2.default,
+								null,
+								_react2.default.createElement(
+									_reactRouter.Link,
+									{
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: "/" + acc.Name + "/Demands",
+										activeStyle: {
+											textDecoration: 'none',
+											color: '#0097a7'
+										}
+									},
+									'Demands'
 								)
 							),
 							_react2.default.createElement(
@@ -51708,14 +51781,15 @@
 								_react2.default.createElement(
 									_reactRouter.Link,
 									{
-										style: { color: theme.value.palette.textColor },
-										to: 'MenuLink2',
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: "/" + acc.Name + "/Offers",
 										activeStyle: {
 											textDecoration: 'none',
 											color: '#0097a7'
 										}
 									},
-									'Menu Link 2'
+									'Offers'
 								)
 							),
 							_react2.default.createElement(
@@ -51724,46 +51798,15 @@
 								_react2.default.createElement(
 									_reactRouter.Link,
 									{
-										style: { color: theme.value.palette.textColor },
-										to: 'MenuLink3',
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: "/" + acc.Name + "/ServicePacks",
 										activeStyle: {
 											textDecoration: 'none',
 											color: '#0097a7'
 										}
 									},
-									'Menu Link 3'
-								)
-							),
-							_react2.default.createElement(
-								_MenuItem2.default,
-								null,
-								_react2.default.createElement(
-									_reactRouter.Link,
-									{
-										style: { color: theme.value.palette.textColor },
-										to: 'MenuLink4',
-										activeStyle: {
-											textDecoration: 'none',
-											color: '#0097a7'
-										}
-									},
-									'Menu Link 4'
-								)
-							),
-							_react2.default.createElement(
-								_MenuItem2.default,
-								null,
-								_react2.default.createElement(
-									_reactRouter.Link,
-									{
-										style: { color: theme.value.palette.textColor },
-										to: 'MenuLink5',
-										activeStyle: {
-											textDecoration: 'none',
-											color: '#0097a7'
-										}
-									},
-									'Menu Link 5'
+									'Service Packs'
 								)
 							)
 						),
@@ -51787,8 +51830,9 @@
 								_react2.default.createElement(
 									_reactRouter.Link,
 									{
-										style: { color: theme.value.palette.textColor },
-										to: 'Settings',
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: '/Settings',
 										activeStyle: {
 											textDecoration: 'none',
 											color: '#0097a7'
@@ -51803,8 +51847,9 @@
 								_react2.default.createElement(
 									_reactRouter.Link,
 									{
-										style: { color: theme.value.palette.textColor },
-										to: 'Feedback',
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: '/Feedback',
 										activeStyle: {
 											textDecoration: 'none',
 											color: '#0097a7'
@@ -51819,8 +51864,9 @@
 								_react2.default.createElement(
 									_reactRouter.Link,
 									{
-										style: { color: theme.value.palette.textColor },
-										to: 'Help',
+										style: { textDecoration: 'none',
+											color: theme.value.palette.textColor },
+										to: '/Help',
 										activeStyle: {
 											textDecoration: 'none',
 											color: '#0097a7'
@@ -51851,6 +51897,8 @@
 		theme: _react.PropTypes.object.isRequired,
 		isFetching: _react.PropTypes.bool.isRequired,
 		open: _react.PropTypes.bool.isRequired,
+		acc: _react.PropTypes.object.isRequired,
+		users: _react.PropTypes.object.isRequired,
 		initState: _react.PropTypes.func.isRequired,
 		changeTheme: _react.PropTypes.func.isRequired,
 		toggleDrawer: _react.PropTypes.func.isRequired,
@@ -61755,6 +61803,8 @@
 
 	var _login3 = __webpack_require__(801);
 
+	var _login4 = _interopRequireDefault(_login3);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var mapStateToProps = function mapStateToProps(state) {
@@ -61765,16 +61815,351 @@
 
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 		return (0, _redux.bindActionCreators)({
-			toggleLoginStatus: _login3.toggleLoginStatus
+			fetchLoginURLs: _login2.default
 		}, dispatch);
 	};
 
-	var Login = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_login2.default);
+	var Login = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_login4.default);
 
 	exports.default = Login;
 
 /***/ },
 /* 795 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = fetchLoginURLs;
+
+	var _fetch = __webpack_require__(796);
+
+	var _fetch2 = _interopRequireDefault(_fetch);
+
+	var _creator = __webpack_require__(799);
+
+	var _creator2 = _interopRequireDefault(_creator);
+
+	var _types = __webpack_require__(224);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Action Creators
+	var requestLoginURLs = (0, _creator2.default)(_types.REQUEST_LOGIN_URLS);
+	var receiveLoginURLsSuccess = (0, _creator2.default)(_types.RECEIVE_LOGIN_URLS_SUCCESS, 'data', 'receivedAt');
+	var receiveLoginURLsError = (0, _creator2.default)(_types.RECEIVE_LOGIN_URLS_ERROR, 'error');
+
+	function fetchLoginURLs() {
+		var init = {
+			method: 'POST'
+		};
+		var r = new Request("/", init);
+		return function (dispatch, getState) {
+			var state = getState();
+			var path = state.loginURLs.byId;
+			return dispatch((0, _fetch2.default)(requestLoginURLs, receiveLoginURLsSuccess, receiveLoginURLsError, r, path));
+		};
+	}
+
+/***/ },
+/* 796 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = fetchDomainDataIfNeeded;
+
+	var _body = __webpack_require__(797);
+
+	function fetchDomainDataIfNeeded() {
+		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+			args[_key] = arguments[_key];
+		}
+
+		// Note that the function also receives getState()
+		// which lets you choose what to dispatch next.
+
+		// This is useful for avoiding a network request if
+		// a cached value is already available.
+		return function (dispatch) {
+			if (shouldFetchDomainData(args)) {
+				// Dispatch a thunk from thunk.
+				return dispatch(fetchDomainData(args));
+			} else {
+				// Let the calling code know there's nothing to wait for.
+				return Promise.resolve();
+			}
+		};
+	} // import fetch from 'isomorphic-fetch'
+
+
+	function shouldFetchDomainData(args) {
+		var appState = void 0;
+		// args[0], args[1] and args[2] 
+		// are action creators.
+		// args[3] is request.
+		// so i don't need them here.
+		// args[4] is domain data.
+		if (!args[4].items) {
+			return true;
+		} else if (args[4].isFetching) {
+			return false;
+		} else {
+			return args[4].didInvalidate;
+		}
+	}
+
+	function fetchDomainData(args) {
+		return function (dispatch) {
+			// args[0] is request action creator.
+			dispatch(args[0]());
+			// args[5] is for hiding fetch progress.
+			if (!args[5]) dispatch((0, _body.toggleFetching)());
+			// args[1] is success action creators.
+			// args[2] is error action creators.
+			// args[3] is request.
+			// REMOVE IF STATEMENT BELOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			/* if (self.fetch)
+	  console.log('fetch is supported by the browser')
+	  else
+	  console.log('fetch is not supported by the browser,' + 
+	  	'use XMLHttpRequest instead') */
+			// return fetch(`http://www.reddit.com/r/${subreddit}.json`)
+			return fetch(args[3]).then(function (response) {
+				// throw new TypeError('Hello my funny TypeError =)')
+				// args[5] is for hiding fetch progress.
+				if (!args[5]) dispatch((0, _body.toggleFetching)());
+				if (response.ok) {
+					// console.log(response)
+					var contentType = response.headers.get('content-type');
+					if (contentType && contentType.indexOf('text/html') !== -1) {
+						response.text().then(function (body) {
+							return dispatch(args[1](body, Date.now()));
+						});
+					} else if (contentType && contentType.indexOf('application/json') !== -1) {
+						response.json().then(function (json) {
+							return dispatch(args[1](json.data.children.map(function (child) {
+								return child.data;
+							}), Date.now()));
+						});
+					}
+					// Backand sending JSON data as Marshald form.
+					// So the Content-Type is "text/plain".
+					else if (contentType && contentType.indexOf('text/plain') !== -1) {
+							response.text().then(function (text) {
+								var payload = JSON.parse(text);
+								dispatch(args[1](payload.data, Date.now()));
+							});
+						}
+				} else {
+					// response code is not between 199 and 300
+					console.log('Response code is not between 199 and ' + '300');
+				}
+			}).catch(function (err) {
+				console.log('There has been a problem with my fetch' + (' operation: ' + err.message));
+				dispatch(args[2](err.message));
+			});
+		};
+	}
+
+/***/ },
+/* 797 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.toggleFetching = exports.toggleDrawer = exports.changeTheme = undefined;
+	exports.default = initState;
+
+	var _account = __webpack_require__(798);
+
+	var _account2 = _interopRequireDefault(_account);
+
+	var _users = __webpack_require__(800);
+
+	var _users2 = _interopRequireDefault(_users);
+
+	var _creator = __webpack_require__(799);
+
+	var _creator2 = _interopRequireDefault(_creator);
+
+	var _types = __webpack_require__(224);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Action Creators
+	var changeTheme = exports.changeTheme = (0, _creator2.default)(_types.CHANGE_THEME);
+	var toggleDrawer = exports.toggleDrawer = (0, _creator2.default)(_types.TOGGLE_DRAWER);
+	var toggleFetching = exports.toggleFetching = (0, _creator2.default)(_types.TOGGLE_FETCHING);
+
+	function initState(acc) {
+		return function (dispatch) {
+			dispatch((0, _account2.default)(acc)).then(dispatch(toggleDrawer()));
+		};
+	}
+
+/***/ },
+/* 798 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = fetchAccountData;
+
+	var _fetch = __webpack_require__(796);
+
+	var _fetch2 = _interopRequireDefault(_fetch);
+
+	var _creator = __webpack_require__(799);
+
+	var _creator2 = _interopRequireDefault(_creator);
+
+	var _types = __webpack_require__(224);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Action Creators
+	var requestAccountData = (0, _creator2.default)(_types.REQUEST_ACCOUNT_DATA);
+	var receiveAccountDataSuccess = (0, _creator2.default)(_types.RECEIVE_ACCOUNT_DATA_SUCCESS, 'data', 'receivedAt');
+	var receiveAccountDataError = (0, _creator2.default)(_types.RECEIVE_ACCOUNT_DATA_ERROR, 'error');
+
+	function fetchAccountData(args, url) {
+		var URL = url || '/';
+		var as = args || { acc: null };
+		console.log(as);
+		// const headers = new Headers({'Content-Type': 'text/xml'})
+		var body = JSON.stringify({ data: as });
+		var init = {
+			method: 'POST',
+			credentials: "same-origin",
+			body: body
+			// headers: headers,
+			// referrer: '/MerinEREN',
+			// mode: 'no-cors'
+		};
+		var r = new Request(URL, init);
+		return function (dispatch, getState) {
+			var state = getState();
+			var path = state.entities.account.byId;
+			return dispatch((0, _fetch2.default)(requestAccountData, receiveAccountDataSuccess, receiveAccountDataError, r, path));
+		};
+	}
+
+/***/ },
+/* 799 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = makeActionCreator;
+	function makeActionCreator(type) {
+		for (var _len = arguments.length, argNames = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+			argNames[_key - 1] = arguments[_key];
+		}
+
+		return function () {
+			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+				args[_key2] = arguments[_key2];
+			}
+
+			var action = { type: type };
+			argNames.forEach(function (argName, i) {
+				action[argName] = args[i];
+			});
+			return action;
+		};
+	}
+
+/***/ },
+/* 800 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = fetchUsersData;
+
+	var _fetch = __webpack_require__(796);
+
+	var _fetch2 = _interopRequireDefault(_fetch);
+
+	var _creator = __webpack_require__(799);
+
+	var _creator2 = _interopRequireDefault(_creator);
+
+	var _types = __webpack_require__(224);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	// Action Creators
+	var requestUsersData = (0, _creator2.default)(_types.REQUEST_USERS_DATA);
+	var receiveUsersDataSuccess = (0, _creator2.default)(_types.RECEIVE_USERS_DATA_SUCCESS, 'data', 'receivedAt');
+	var receiveUsersDataError = (0, _creator2.default)(_types.RECEIVE_USERS_DATA_ERROR, 'error');
+
+	function fetchUsersData(args, url) {
+		var URL = url || '/';
+		var as = args || {};
+		// const headers = new Headers({'Content-Type': 'text/xml'})
+		var body = JSON.stringify({ data: as });
+		var init = {
+			method: 'POST',
+			credentials: "same-origin",
+			body: body
+			// headers: headers,
+			// referrer: '/MerinEREN',
+			// mode: 'no-cors'
+		};
+		var r = new Request(URL, init);
+		return function (dispatch, getState) {
+			var state = getState();
+			var path = state.entities.users.byId;
+			return dispatch((0, _fetch2.default)(requestUsersData, receiveUsersDataSuccess, receiveUsersDataError, r, path));
+		};
+	}
+	/* export default function fetchMaker(args) {
+		return function(URL, body) {
+			const URL = url ? url : '/'
+			// const headers = new Headers({'Content-Type': 'text/xml'})
+			const init = {
+				method: 'POST',
+				body
+				// headers: headers,
+				// referrer: '/MerinEREN',
+				// mode: 'no-cors'
+			}
+			const r = new Request(URL, init)
+			return (dispatch, getState) => {
+				const state = getState()
+				const path = state.entities.users.byId
+				return dispatch(fetchDomainDataIfNeeded(
+					args[0],
+					args[1],
+					args[2],
+					r,
+					path
+				))
+			}
+		}
+	} */
+
+/***/ },
+/* 801 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -61791,11 +62176,11 @@
 
 	var _reactRouter = __webpack_require__(645);
 
-	var _FlatButton = __webpack_require__(796);
+	var _FlatButton = __webpack_require__(802);
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _Popover = __webpack_require__(799);
+	var _Popover = __webpack_require__(805);
 
 	var _Popover2 = _interopRequireDefault(_Popover);
 
@@ -61832,6 +62217,11 @@
 		}
 
 		_createClass(Login, [{
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				this.props.fetchLoginURLs();
+			}
+		}, {
 			key: 'handleTouchTap',
 			value: function handleTouchTap(event) {
 				// This prevents ghost click.
@@ -61851,7 +62241,7 @@
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this2 = this;
+				var loginURLs = this.props.loginURLs;
 
 				return _react2.default.createElement(
 					'div',
@@ -61872,20 +62262,15 @@
 						_react2.default.createElement(
 							_Menu2.default,
 							null,
-							Object.keys(this.props.loginURLs.items).map(function (key) {
-								return _react2.default.createElement(
-									_MenuItem2.default,
-									{
-										key: key
-									},
-									_react2.default.createElement(
+							Object.keys(loginURLs.items).map(function (key) {
+								return _react2.default.createElement(_MenuItem2.default, {
+									key: key,
+									children: _react2.default.createElement(
 										'a',
-										{ href: _this2.props.loginURLs.items[key], onTouchTap: function onTouchTap() {
-												return _this2.props.toggleLoginStatus();
-											} },
+										{ href: loginURLs.items[key] },
 										key
 									)
-								);
+								});
 							})
 						)
 					)
@@ -61898,13 +62283,13 @@
 
 	Login.propTypes = {
 		loginURLs: _react.PropTypes.object.isRequired,
-		toggleLoginStatus: _react.PropTypes.func.isRequired
+		fetchLoginURLs: _react.PropTypes.func.isRequired
 	};
 
 	exports.default = Login;
 
 /***/ },
-/* 796 */
+/* 802 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -61914,7 +62299,7 @@
 	});
 	exports.default = undefined;
 
-	var _FlatButton = __webpack_require__(797);
+	var _FlatButton = __webpack_require__(803);
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
@@ -61923,7 +62308,7 @@
 	exports.default = _FlatButton2.default;
 
 /***/ },
-/* 797 */
+/* 803 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -61980,7 +62365,7 @@
 
 	var _EnhancedButton2 = _interopRequireDefault(_EnhancedButton);
 
-	var _FlatButtonLabel = __webpack_require__(798);
+	var _FlatButtonLabel = __webpack_require__(804);
 
 	var _FlatButtonLabel2 = _interopRequireDefault(_FlatButtonLabel);
 
@@ -62253,7 +62638,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 798 */
+/* 804 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -62345,7 +62730,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 799 */
+/* 805 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -62359,7 +62744,7 @@
 
 	var _Popover3 = _interopRequireDefault(_Popover2);
 
-	var _PopoverAnimationVertical2 = __webpack_require__(800);
+	var _PopoverAnimationVertical2 = __webpack_require__(806);
 
 	var _PopoverAnimationVertical3 = _interopRequireDefault(_PopoverAnimationVertical2);
 
@@ -62370,7 +62755,7 @@
 	exports.default = _Popover3.default;
 
 /***/ },
-/* 800 */
+/* 806 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -62519,92 +62904,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 801 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.toggleLoginStatus = undefined;
-
-	var _creator = __webpack_require__(802);
-
-	var _creator2 = _interopRequireDefault(_creator);
-
-	var _types = __webpack_require__(224);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var toggleLoginStatus = exports.toggleLoginStatus = (0, _creator2.default)(_types.TOGGLE_LOGIN_STATUS);
-
-/***/ },
-/* 802 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = makeActionCreator;
-	function makeActionCreator(type) {
-		for (var _len = arguments.length, argNames = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-			argNames[_key - 1] = arguments[_key];
-		}
-
-		return function () {
-			for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-				args[_key2] = arguments[_key2];
-			}
-
-			var action = { type: type };
-			argNames.forEach(function (argName, i) {
-				action[argName] = args[i];
-			});
-			return action;
-		};
-	}
-
-/***/ },
-/* 803 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _reactRedux = __webpack_require__(180);
-
-	var _redux = __webpack_require__(191);
-
-	var _logged = __webpack_require__(804);
-
-	var _logged2 = _interopRequireDefault(_logged);
-
-	var _login = __webpack_require__(801);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var mapStateToProps = function mapStateToProps(state) {
-		return {};
-	};
-
-	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-		return (0, _redux.bindActionCreators)({
-			toggleLoginStatus: _login.toggleLoginStatus
-		}, dispatch);
-	};
-
-	var Logged = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_logged2.default);
-
-	exports.default = Logged;
-
-/***/ },
-/* 804 */
+/* 807 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -62617,7 +62917,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _IconMenu = __webpack_require__(805);
+	var _reactRouter = __webpack_require__(645);
+
+	var _IconMenu = __webpack_require__(808);
 
 	var _IconMenu2 = _interopRequireDefault(_IconMenu);
 
@@ -62629,14 +62931,13 @@
 
 	var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
-	var _moreVert = __webpack_require__(807);
+	var _moreVert = __webpack_require__(810);
 
 	var _moreVert2 = _interopRequireDefault(_moreVert);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var Logged = function Logged(_ref) {
-		var toggleLoginStatus = _ref.toggleLoginStatus;
+	var Logged = function Logged() {
 		return _react2.default.createElement(
 			_IconMenu2.default,
 			{
@@ -62650,14 +62951,20 @@
 			},
 			_react2.default.createElement(_MenuItem2.default, { primaryText: 'Refresh' }),
 			_react2.default.createElement(_MenuItem2.default, { primaryText: 'Help' }),
-			_react2.default.createElement(_MenuItem2.default, { primaryText: 'Sign out', onTouchTap: function onTouchTap() {
-					return toggleLoginStatus();
-				} })
+			_react2.default.createElement(_MenuItem2.default, { children: _react2.default.createElement(
+					'a',
+					{
+						style: { textDecoration: 'none' },
+						href: 'logout/',
+						activeStyle: {
+							textDecoration: 'none',
+							color: '#0097a7'
+						}
+					},
+					'Logout'
+				)
+			})
 		);
-	};
-
-	Logged.propTypes = {
-		toggleLoginStatus: _react.PropTypes.func.isRequired
 	};
 
 	// My custom 'Logged' component acts like 'IconMenu' mui component !!!!!!!!!!!!!!!!!!!!!!!
@@ -62666,7 +62973,7 @@
 	exports.default = Logged;
 
 /***/ },
-/* 805 */
+/* 808 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -62676,7 +62983,7 @@
 	});
 	exports.default = exports.MenuItem = exports.IconMenu = undefined;
 
-	var _IconMenu2 = __webpack_require__(806);
+	var _IconMenu2 = __webpack_require__(809);
 
 	var _IconMenu3 = _interopRequireDefault(_IconMenu2);
 
@@ -62691,7 +62998,7 @@
 	exports.default = _IconMenu3.default;
 
 /***/ },
-/* 806 */
+/* 809 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -63112,7 +63419,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 807 */
+/* 810 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -63149,7 +63456,7 @@
 	exports.default = NavigationMoreVert;
 
 /***/ },
-/* 808 */
+/* 811 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -63159,7 +63466,7 @@
 	});
 	exports.default = undefined;
 
-	var _Toggle = __webpack_require__(809);
+	var _Toggle = __webpack_require__(812);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
 
@@ -63168,7 +63475,7 @@
 	exports.default = _Toggle2.default;
 
 /***/ },
-/* 809 */
+/* 812 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -63221,7 +63528,7 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
-	var _EnhancedSwitch = __webpack_require__(810);
+	var _EnhancedSwitch = __webpack_require__(813);
 
 	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
 
@@ -63500,7 +63807,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 810 */
+/* 813 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -63957,7 +64264,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 811 */
+/* 814 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -63967,7 +64274,7 @@
 	});
 	exports.default = undefined;
 
-	var _Divider = __webpack_require__(812);
+	var _Divider = __webpack_require__(815);
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
@@ -63976,7 +64283,7 @@
 	exports.default = _Divider2.default;
 
 /***/ },
-/* 812 */
+/* 815 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -64051,331 +64358,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 813 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.toggleFetching = exports.toggleDrawer = exports.changeTheme = undefined;
-	exports.default = initState;
-
-	var _loginURLs = __webpack_require__(814);
-
-	var _loginURLs2 = _interopRequireDefault(_loginURLs);
-
-	var _account = __webpack_require__(816);
-
-	var _account2 = _interopRequireDefault(_account);
-
-	var _users = __webpack_require__(817);
-
-	var _users2 = _interopRequireDefault(_users);
-
-	var _creator = __webpack_require__(802);
-
-	var _creator2 = _interopRequireDefault(_creator);
-
-	var _types = __webpack_require__(224);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Action Creators
-
-	// import fetchLogoutURL from './logoutURL'
-	var changeTheme = exports.changeTheme = (0, _creator2.default)(_types.CHANGE_THEME);
-	var toggleDrawer = exports.toggleDrawer = (0, _creator2.default)(_types.TOGGLE_DRAWER);
-	var toggleFetching = exports.toggleFetching = (0, _creator2.default)(_types.TOGGLE_FETCHING);
-
-	function initState(session) {
-		if (session) {
-			return function (dispatch) {
-				// true means hide fetching progress.
-				// dispatch(fetchLogoutURL(true))
-				dispatch((0, _account2.default)(true));
-				dispatch((0, _users2.default)()).then(dispatch(toggleDrawer()));
-			};
-		} else {
-			return function (dispatch) {
-				return dispatch((0, _loginURLs2.default)());
-			};
-		}
-	}
-
-/***/ },
-/* 814 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = fetchLoginURLs;
-
-	var _fetch = __webpack_require__(815);
-
-	var _fetch2 = _interopRequireDefault(_fetch);
-
-	var _creator = __webpack_require__(802);
-
-	var _creator2 = _interopRequireDefault(_creator);
-
-	var _types = __webpack_require__(224);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Action Creators
-	var requestLoginURLs = (0, _creator2.default)(_types.REQUEST_LOGIN_URLS);
-	var receiveLoginURLsSuccess = (0, _creator2.default)(_types.RECEIVE_LOGIN_URLS_SUCCESS, 'data', 'receivedAt');
-	var receiveLoginURLsError = (0, _creator2.default)(_types.RECEIVE_LOGIN_URLS_ERROR, 'error');
-
-	function fetchLoginURLs(body, url) {
-		var URL = url ? url : '/';
-		// const headers = new Headers({'Content-Type': 'text/xml'})
-		var init = {
-			method: 'POST',
-			credentials: "same-origin",
-			body: body
-			// headers: headers,
-			// referrer: '/MerinEREN',
-			// mode: 'no-cors'
-		};
-		var r = new Request(URL, init);
-		return function (dispatch, getState) {
-			var state = getState();
-			var path = state.loginURLs.byId;
-			return dispatch((0, _fetch2.default)(requestLoginURLs, receiveLoginURLsSuccess, receiveLoginURLsError, r, path));
-		};
-	}
-
-/***/ },
-/* 815 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = fetchDomainDataIfNeeded;
-
-	var _body = __webpack_require__(813);
-
-	function fetchDomainDataIfNeeded() {
-		for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-			args[_key] = arguments[_key];
-		}
-
-		// Note that the function also receives getState()
-		// which lets you choose what to dispatch next.
-
-		// This is useful for avoiding a network request if
-		// a cached value is already available.
-		return function (dispatch) {
-			if (shouldFetchDomainData(args)) {
-				// Dispatch a thunk from thunk.
-				return dispatch(fetchDomainData(args));
-			} else {
-				// Let the calling code know there's nothing to wait for.
-				return Promise.resolve();
-			}
-		};
-	} // import fetch from 'isomorphic-fetch'
-
-
-	function shouldFetchDomainData(args) {
-		var appState = void 0;
-		// args[0], args[1] and args[2] 
-		// are action creators.
-		// args[3] is request.
-		// so i don't need them here.
-		// args[4] is domain data.
-		if (!args[4].items) {
-			return true;
-		} else if (args[4].isFetching) {
-			return false;
-		} else {
-			return args[4].didInvalidate;
-		}
-	}
-
-	function fetchDomainData(args) {
-		return function (dispatch) {
-			// args[5] is for hiding fetch progress.
-			if (!args[5]) dispatch((0, _body.toggleFetching)());
-			// args[0] is request action creator.
-			dispatch(args[0]());
-			// args[1] is success action creators.
-			// args[2] is error action creators.
-			// args[3] is request.
-			// REMOVE IF STATEMENT BELOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			if (self.fetch) console.log('fetch is supported by the browser');else console.log('fetch is not supported by the browser,' + 'use XMLHttpRequest instead');
-			var myRequest = new Request(args[3]);
-			// return fetch(`http://www.reddit.com/r/${subreddit}.json`)
-			return fetch(myRequest).then(function (response) {
-				// throw new TypeError('Hello my funny TypeError =)')
-				// args[5] is for hiding fetch progress.
-				if (!args[5]) dispatch((0, _body.toggleFetching)());
-				if (response.ok) {
-					console.log(response);
-					var contentType = response.headers.get('content-type');
-					if (contentType && contentType.indexOf('text/html') !== -1) {
-						response.text().then(function (body) {
-							return dispatch(args[1](body, Date.now()));
-						});
-					} else if (contentType && contentType.indexOf('application/json') !== -1) {
-						response.json().then(function (json) {
-							return dispatch(args[1](json.data.children.map(function (child) {
-								return child.data;
-							}), Date.now()));
-						});
-					}
-					// Backand sending JSON data as Marshald form.
-					// So the Content-Type is "text/plain".
-					else if (contentType && contentType.indexOf('text/plain') !== -1) {
-							response.text().then(function (text) {
-								return dispatch(args[1](JSON.parse(text), Date.now()));
-							});
-						}
-				} else {
-					// response code is not between 199 and 300
-					console.log('Response code is not between 199 and ' + '300');
-				}
-			}).catch(function (err) {
-				console.log('There has been a problem with my fetch' + (' operation: ' + err.message));
-				dispatch(args[2](err.message));
-			});
-		};
-	}
-
-/***/ },
 /* 816 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = fetchAccountData;
-
-	var _fetch = __webpack_require__(815);
-
-	var _fetch2 = _interopRequireDefault(_fetch);
-
-	var _creator = __webpack_require__(802);
-
-	var _creator2 = _interopRequireDefault(_creator);
-
-	var _types = __webpack_require__(224);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Action Creators
-	var requestAccountData = (0, _creator2.default)(_types.REQUEST_ACCOUNT_DATA);
-	var receiveAccountDataSuccess = (0, _creator2.default)(_types.RECEIVE_ACCOUNT_DATA_SUCCESS, 'data', 'receivedAt');
-	var receiveAccountDataError = (0, _creator2.default)(_types.RECEIVE_ACCOUNT_DATA_ERROR, 'error');
-
-	function fetchAccountData(hideFetchingProgress, body, url) {
-		var URL = url ? url : '/';
-		// const headers = new Headers({'Content-Type': 'text/xml'})
-		var init = {
-			method: 'POST',
-			credentials: "same-origin",
-			body: body
-			// headers: headers,
-			// referrer: '/MerinEREN',
-			// mode: 'no-cors'
-		};
-		var r = new Request(URL, init);
-		return function (dispatch, getState) {
-			var state = getState();
-			var path = state.entities.account.byId;
-			return dispatch((0, _fetch2.default)(requestAccountData, receiveAccountDataSuccess, receiveAccountDataError, r, path, hideFetchingProgress));
-		};
-	}
-
-/***/ },
-/* 817 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = fetchUsersData;
-
-	var _fetch = __webpack_require__(815);
-
-	var _fetch2 = _interopRequireDefault(_fetch);
-
-	var _creator = __webpack_require__(802);
-
-	var _creator2 = _interopRequireDefault(_creator);
-
-	var _types = __webpack_require__(224);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	// Action Creators
-	var requestUsersData = (0, _creator2.default)(_types.REQUEST_USERS_DATA);
-	var receiveUsersDataSuccess = (0, _creator2.default)(_types.RECEIVE_USERS_DATA_SUCCESS, 'data', 'receivedAt');
-	var receiveUsersDataError = (0, _creator2.default)(_types.RECEIVE_USERS_DATA_ERROR, 'error');
-
-	function fetchUsersData(body, url) {
-		var URL = url ? url : '/';
-		// const headers = new Headers({'Content-Type': 'text/xml'})
-		var init = {
-			method: 'POST',
-			credentials: "same-origin",
-			body: body
-			// headers: headers,
-			// referrer: '/MerinEREN',
-			// mode: 'no-cors'
-		};
-		var r = new Request(URL, init);
-		return function (dispatch, getState) {
-			var state = getState();
-			var path = state.entities.users.byId;
-			return dispatch((0, _fetch2.default)(requestUsersData, receiveUsersDataSuccess, receiveUsersDataError, r, path));
-		};
-	}
-	/* export default function fetchMaker(args) {
-		return function(URL, body) {
-			const URL = url ? url : '/'
-			// const headers = new Headers({'Content-Type': 'text/xml'})
-			const init = {
-				method: 'POST',
-				body
-				// headers: headers,
-				// referrer: '/MerinEREN',
-				// mode: 'no-cors'
-			}
-			const r = new Request(URL, init)
-			return (dispatch, getState) => {
-				const state = getState()
-				const path = state.entities.users.byId
-				return dispatch(fetchDomainDataIfNeeded(
-					args[0],
-					args[1],
-					args[2],
-					r,
-					path
-				))
-			}
-		}
-	} */
-
-/***/ },
-/* 818 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(819);
-	var defaultClickRejectionStrategy = __webpack_require__(820);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(817);
+	var defaultClickRejectionStrategy = __webpack_require__(818);
 
 	var alreadyInjected = false;
 
@@ -64397,14 +64384,14 @@
 	  alreadyInjected = true;
 
 	  __webpack_require__(42).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(821)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(819)(shouldRejectClick)
 	  });
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 819 */
+/* 817 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -64459,7 +64446,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 820 */
+/* 818 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -64470,7 +64457,7 @@
 
 
 /***/ },
-/* 821 */
+/* 819 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -64494,14 +64481,14 @@
 
 	"use strict";
 
-	var EventConstants = __webpack_require__(822);
+	var EventConstants = __webpack_require__(820);
 	var EventPluginUtils = __webpack_require__(44);
 	var EventPropagators = __webpack_require__(41);
 	var SyntheticUIEvent = __webpack_require__(75);
-	var TouchEventUtils = __webpack_require__(823);
+	var TouchEventUtils = __webpack_require__(821);
 	var ViewportMetrics = __webpack_require__(76);
 
-	var keyOf = __webpack_require__(824);
+	var keyOf = __webpack_require__(822);
 	var topLevelTypes = EventConstants.topLevelTypes;
 
 	var isStartish = EventPluginUtils.isStartish;
@@ -64647,7 +64634,7 @@
 
 
 /***/ },
-/* 822 */
+/* 820 */
 /***/ function(module, exports) {
 
 	/**
@@ -64743,7 +64730,7 @@
 	module.exports = EventConstants;
 
 /***/ },
-/* 823 */
+/* 821 */
 /***/ function(module, exports) {
 
 	/**
@@ -64791,7 +64778,7 @@
 
 
 /***/ },
-/* 824 */
+/* 822 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -64830,7 +64817,7 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 825 */
+/* 823 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -64843,11 +64830,11 @@
 
 	var _redux = __webpack_require__(191);
 
-	var _todos = __webpack_require__(826);
+	var _todos = __webpack_require__(824);
 
 	var _todos2 = _interopRequireDefault(_todos);
 
-	var _todos3 = __webpack_require__(829);
+	var _todos3 = __webpack_require__(827);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -64869,7 +64856,7 @@
 	exports.default = ToDos;
 
 /***/ },
-/* 826 */
+/* 824 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -64884,17 +64871,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _muiThemeable = __webpack_require__(827);
+	var _muiThemeable = __webpack_require__(825);
 
 	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
 
 	var _reactRouter = __webpack_require__(645);
 
-	var _FlatButton = __webpack_require__(796);
+	var _FlatButton = __webpack_require__(802);
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _todo = __webpack_require__(828);
+	var _todo = __webpack_require__(826);
 
 	var _todo2 = _interopRequireDefault(_todo);
 
@@ -64959,7 +64946,7 @@
 	exports.default = (0, _muiThemeable2.default)()(ToDos);
 
 /***/ },
-/* 827 */
+/* 825 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65012,7 +64999,7 @@
 	}
 
 /***/ },
-/* 828 */
+/* 826 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65027,15 +65014,15 @@
 
 	var _reactRedux = __webpack_require__(180);
 
-	var _muiThemeable = __webpack_require__(827);
+	var _muiThemeable = __webpack_require__(825);
 
 	var _muiThemeable2 = _interopRequireDefault(_muiThemeable);
 
-	var _FlatButton = __webpack_require__(796);
+	var _FlatButton = __webpack_require__(802);
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _todos = __webpack_require__(829);
+	var _todos = __webpack_require__(827);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -65104,7 +65091,7 @@
 	exports.default = (0, _reactRedux.connect)()((0, _muiThemeable2.default)()(ToDo));
 
 /***/ },
-/* 829 */
+/* 827 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65114,11 +65101,11 @@
 	});
 	exports.save = exports.remove = exports.edit = exports.add = undefined;
 
-	var _isomorphicFetch = __webpack_require__(830);
+	var _isomorphicFetch = __webpack_require__(828);
 
 	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
 
-	var _creator = __webpack_require__(802);
+	var _creator = __webpack_require__(799);
 
 	var _creator2 = _interopRequireDefault(_creator);
 
@@ -65137,19 +65124,19 @@
 	var save = exports.save = (0, _creator2.default)(_types.SAVE_TODO, 'id', 'text');
 
 /***/ },
-/* 830 */
+/* 828 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(831);
+	__webpack_require__(829);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 831 */
+/* 829 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -65588,7 +65575,111 @@
 
 
 /***/ },
+/* 830 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Account = function Account() {
+	  return _react2.default.createElement(
+	    'h1',
+	    null,
+	    'Account Page =)'
+	  );
+	};
+
+	exports.default = Account;
+
+/***/ },
+/* 831 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Demands = function Demands() {
+	  return _react2.default.createElement(
+	    'h1',
+	    null,
+	    'Demands Page =)'
+	  );
+	};
+
+	exports.default = Demands;
+
+/***/ },
 /* 832 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Offers = function Offers() {
+	  return _react2.default.createElement(
+	    'h1',
+	    null,
+	    'Offers Page =)'
+	  );
+	};
+
+	exports.default = Offers;
+
+/***/ },
+/* 833 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ServicePacks = function ServicePacks() {
+	  return _react2.default.createElement(
+	    'h1',
+	    null,
+	    'ServicePacks Page =)'
+	  );
+	};
+
+	exports.default = ServicePacks;
+
+/***/ },
+/* 834 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65614,7 +65705,7 @@
 	exports.default = Settings;
 
 /***/ },
-/* 833 */
+/* 835 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65640,7 +65731,7 @@
 	exports.default = Feedback;
 
 /***/ },
-/* 834 */
+/* 836 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65666,7 +65757,7 @@
 	exports.default = Help;
 
 /***/ },
-/* 835 */
+/* 837 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
