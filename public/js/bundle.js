@@ -61852,8 +61852,11 @@
 	var receiveLoginURLsError = (0, _creator2.default)(_types.RECEIVE_LOGIN_URLS_ERROR, 'error');
 
 	function fetchLoginURLs() {
+		var headers = new Headers({ 'Accept': 'text/plain' });
 		var init = {
-			method: 'POST'
+			// method: 'POST',
+			// credentials: "same-origin",
+			headers: headers
 		};
 		var r = new Request("/", init);
 		return function (dispatch, getState) {
@@ -62038,15 +62041,13 @@
 		var URL = url || '/';
 		var as = args || { acc: null };
 		console.log(as);
-		// const headers = new Headers({'Content-Type': 'text/xml'})
-		var body = JSON.stringify({ data: as });
+		var headers = new Headers({ 'Accept': 'text/plain' });
+		// const body = JSON.stringify({data: as})
 		var init = {
-			method: 'POST',
+			// method: 'POST',
 			credentials: "same-origin",
-			body: body
-			// headers: headers,
-			// referrer: '/MerinEREN',
-			// mode: 'no-cors'
+			// body,
+			headers: headers
 		};
 		var r = new Request(URL, init);
 		return function (dispatch, getState) {
@@ -62115,15 +62116,13 @@
 	function fetchUsersData(args, url) {
 		var URL = url || '/';
 		var as = args || {};
-		// const headers = new Headers({'Content-Type': 'text/xml'})
-		var body = JSON.stringify({ data: as });
+		var headers = new Headers({ 'Accept': 'text/plain' });
+		// const body = JSON.stringify({data: as})
 		var init = {
-			method: 'POST',
+			// method: 'POST',
 			credentials: "same-origin",
-			body: body
-			// headers: headers,
-			// referrer: '/MerinEREN',
-			// mode: 'no-cors'
+			// body,
+			headers: headers
 		};
 		var r = new Request(URL, init);
 		return function (dispatch, getState) {

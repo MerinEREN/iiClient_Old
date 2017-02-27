@@ -19,9 +19,11 @@ const receiveLoginURLsError = makeActionCreator(
 )
 
 export default function fetchLoginURLs() {
+	const headers = new Headers({'Accept': 'text/plain'})
 	const init = {
-		method: 'POST',
-		// credentials: "same-origin"
+		// method: 'POST',
+		// credentials: "same-origin",
+		headers
 	}
 	const r = new Request("/", init)
 	return (dispatch, getState) => {

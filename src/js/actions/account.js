@@ -22,13 +22,13 @@ export default function fetchAccountData(args, url) {
 	const URL = url || '/'
 	const as = args || {acc: null}
 	console.log(as)
-	// const headers = new Headers({'Content-Type': 'text/xml'})
-	const body = JSON.stringify({data: as})
+	const headers = new Headers({'Accept': 'text/plain'})
+	// const body = JSON.stringify({data: as})
 	const init = {
-		method: 'POST',
+		// method: 'POST',
 		credentials: "same-origin",
-		body
-		// headers: headers,
+		// body,
+		headers: headers,
 		// referrer: '/MerinEREN',
 		// mode: 'no-cors'
 	}
