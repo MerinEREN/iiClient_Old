@@ -16,7 +16,7 @@ class Login extends Component {
 	}
 
 	componentDidMount() {
-		this.props.fetchLoginURLs()
+		this.props.loadLoginUrls()
 	}
 
 	handleTouchTap(event) {
@@ -35,7 +35,7 @@ class Login extends Component {
 	}
 
 	render() {
-		const {loginURLs} = this.props
+		const {loginUrls} = this.props
 		return (
 			<div>
 				<FlatButton
@@ -53,10 +53,10 @@ class Login extends Component {
 						>
 							<Menu>
 								{
-									Object.keys(loginURLs.items).map(key => (
+									Object.keys(loginUrls.items).map(key => (
 										<MenuItem 
 											key={key}
-											children={<a href={loginURLs.items[key]}>
+											children={<a href={loginUrls.items[key]}>
 												{key}
 											</a>}
 										/>
@@ -71,8 +71,8 @@ class Login extends Component {
 }
 
 	Login.propTypes = {
-		loginURLs: PropTypes.object.isRequired, 
-		fetchLoginURLs: PropTypes.func.isRequired
+		loginUrls: PropTypes.object.isRequired, 
+		loadLoginUrls: PropTypes.func.isRequired
 	}
 
 	export default Login

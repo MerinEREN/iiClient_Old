@@ -1,12 +1,21 @@
 import {combineReducers} from 'redux'
-import loginURLs from './login'
+import errorMsg from './errorMsg'
+import loginUrls from './loginUrls'
+import {isFetching} from './body'
+import pagination from './pagination'
 import entities from './entities'
 import ui from './ui'
 
 // Root Reducer
 const rootReducer = combineReducers({
-	loginURLs,
+	// App State
+	isFetching, 
+	// Domain Data
+	errorMsg, 
+	loginUrls,
+	pagination,
 	entities,
+	// UI State
 	ui
 })
 

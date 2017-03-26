@@ -1,8 +1,8 @@
 export default function makeActionCreator(type, ...argNames) {
 	return (...args) => {
 		let action = {type}
-		argNames.forEach((argName, i) => {
-			action[argName] = args[i]
+		argNames.forEach((v, i) => {
+			action[v] = args[i]
 		})
 		return action
 	}

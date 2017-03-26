@@ -3,9 +3,11 @@ import {bindActionCreators} from 'redux'
 import TimelineComponent from '../components/timeline'
 import {add, remove} from '../actions/timeline'
 
-const mapStateToProps = (state) => {
+// Can use ownProps here.
+const mapStateToProps = state => {
+	const {demands, offers} = state
 	return {
-		toDos: state.entities.toDos.byId
+		items: {demands, offers}
 	}
 }
 

@@ -1,14 +1,16 @@
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import BodyComponent from '../components/body'
-import initState, {changeTheme, toggleDrawer} from '../actions/body'
+import loadData, {changeTheme, toggleDrawer} from '../actions/body'
 // Needed for onTouchTap, REMOVE WHEN REACT HAS THIS FEATURE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // It's a mobile friendly onClick() alternative for all components in Material-UI 
 // http://stackoverflow.com/a/34015469/988941
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-const mapStateToProps = (state) => {
+// Can use "ownProps" here
+// For accessing params for example.
+const mapStateToProps = state => {
 	/* const { selectedReddit, postsByReddit } = state
 	  const {
 		      isFetching,
@@ -25,24 +27,28 @@ const mapStateToProps = (state) => {
 		      isFetching,
 		      lastUpdated
 		    } */
+	const {
+		isFetching, 
+		ui: {selectedTheme, openDrawer}, 
+		entities: {accounts, users}
+	} = state
 	return {
-		theme: state.ui.selectedTheme,
-		isFetching: state.ui.isFetching,
-		acc: state.entities.account.byId.items,
-		users: state.entities.users,
-		open: state.ui.openDrawer
+		theme: selectedTheme,
+		isFetching,
+		acc: accounts.byId[accounts.allIds[0]], 
+		user: users.byId[users.allIds[0]], 
+		open: openDrawer
 	}
 }
 
-const mapDispatchToProps = (dispatch) => {
-	return bindActionCreators({
-		initState,
+const mapDispatchToProps = dispatch => bindActionCreators(
+	{
+		loadData,
 		changeTheme,
 		toggleDrawer
 	},
-		dispatch
-	)
-}
+	dispatch
+)
 
 const Body = connect(mapStateToProps, mapDispatchToProps)(BodyComponent)
 

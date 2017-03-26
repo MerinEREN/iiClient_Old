@@ -6,16 +6,13 @@ import DevTools from '../dev-tools'
 
 const store = configureStore()
 
-export default class Root extends Component {
-	render() {
-		return (
-			<Provider store={store}>
-				<div>
-					<Theme />
-					<DevTools />
-				</div>
-			</Provider>
-		)
-	}
-}
+const Root = () => (
+	<Provider store={store}>
+		<div>
+			<Theme />
+			<DevTools />
+		</div>
+	</Provider>
+)
 
+export default Root

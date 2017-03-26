@@ -5,12 +5,10 @@ import Theme from '../containers/theme'
 
 const store = configureStore()
 
-export default class Root extends Component {
-	render() {
-		return (
-			<Provider store={store}>
-				<Theme />
-			</Provider>
-		)
-	}
-}
+const Root = () => (
+	<Provider store={store}>
+		<Theme />
+	</Provider>
+)
+
+export default Root

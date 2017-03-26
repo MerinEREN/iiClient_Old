@@ -1,14 +1,17 @@
 // import fetch from 'isomorphic-fetch'
 import {toggleFetching} from '../actions/body'
+import {setErrorMessage} from '../actions/errorMsg'
 
-export default function fetchDomainDataIfNeeded(...args) {
-	// Note that the function also receives getState()
-	// which lets you choose what to dispatch next.
+export default function fetchDomainDataIfNeeded(args) {
+	// Function also receives getState()
+	// which lets us choose what to dispatch next.
 
 	// This is useful for avoiding a network request if
 	// a cached value is already available.
-	return dispatch => {
-		if(shouldFetchDomainData(args)) {
+	return (dispatch, getState) => {
+		const state = getState()
+		// console.log(shouldFetchDomainData(state, args))
+		if(shouldFetchDomainData(state, args)) {
 			// Dispatch a thunk from thunk.
 			return dispatch(fetchDomainData(args))
 		} else {
@@ -18,44 +21,40 @@ export default function fetchDomainDataIfNeeded(...args) {
 	}
 }
 
-function shouldFetchDomainData(args) {
-	let appState
-	// args[0], args[1] and args[2] 
-	// are action creators.
-	// args[3] is request.
-	// so i don't need them here.
-	// args[4] is domain data.
-	if(!args[4].items) {
+// MODIFY THIS CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function shouldFetchDomainData(state, args) {
+	const {isCached} = args
+	// "isCached" should be a string, be careful about that !!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if(!isCached)
 		return true
-	} else if(args[4].isFetching) {
+	return isCached(state) ? false : true
+	/* const item = args.isCached(state)
+	if(!item) {
+		return true
+	} else if(item.isFetching) {
 		return false
 	} else {
-		return args[4].didInvalidate
-	}
+		return item.didInvalidate
+	} */
 }
 
 function fetchDomainData(args) {
+	const {actionsRequest, actionsSuccess, actionsFailure, request, hideFetching, paginationId} = args
 	return dispatch => {
-		// args[0] is request action creator.
-		dispatch(args[0]())
-		// args[5] is for hiding fetch progress.
-		if(!args[5])
+		actionsRequest.every(v => dispatch(v(paginationId)))
+		if(!hideFetching)
 			dispatch(toggleFetching())
-		// args[1] is success action creators.
-		// args[2] is error action creators.
-		// args[3] is request.
 		// REMOVE IF STATEMENT BELOW !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			/* if (self.fetch)
+		/* if (self.fetch)
 			console.log('fetch is supported by the browser')
 		else
 			console.log('fetch is not supported by the browser,' + 
 				'use XMLHttpRequest instead') */
 		// return fetch(`http://www.reddit.com/r/${subreddit}.json`)
-		return fetch(args[3])
+		return fetch(request)
 			.then(response => {
 				// throw new TypeError('Hello my funny TypeError =)')
-				// args[5] is for hiding fetch progress.
-				if(!args[5])
+				if(!hideFetching)
 					dispatch(toggleFetching())
 				if (response.ok) {
 					// console.log(response)
@@ -70,9 +69,9 @@ function fetchDomainData(args) {
 					) {
 						response.text()
 							.then(body => 
-								dispatch(args[1](body, 
-									Date.now()))
-							)
+								actionsSuccess.every(v => 
+									dispatch(v(body, 
+										Date.now()))))
 					} else if (
 						contentType
 						&&
@@ -80,14 +79,14 @@ function fetchDomainData(args) {
 						!==
 						-1
 					) {
-						response.json()
-							.then(json => 
-								dispatch(args[1](json.data.
+						/* response.json()
+							.then(body => 
+								dispatch(args[1](body.data.
 									children.
 									map(child => child.
 										data), 
 									Date.now()))
-							)
+							) */
 					}
 					// Backand sending JSON data as Marshald form.
 					// So the Content-Type is "text/plain".
@@ -99,11 +98,18 @@ function fetchDomainData(args) {
 						-1
 					) {
 						response.text()
-							.then(text => {
-								const payload = JSON.parse(text)
-								dispatch(args[1](
-									payload.data, Date.now()))
-							}
+							.then(body => {
+								const json = 
+									JSON.parse(body)
+								// For loadUserAccount only
+									/* if(Array.isArray(json.result)) {
+									json.result.every((r, i) => dispatch(actionsSuccess[i](paginationId, {...json, result: r}, Date.now)()))
+								} else { */
+									actionsSuccess.every(v => 
+										dispatch(v(json, 
+											Date.now(), paginationId)))
+								}
+								// }
 							)
 					}
 				} else {
@@ -113,6 +119,7 @@ function fetchDomainData(args) {
 						+
 						'300')
 				}
+				dispatch(setErrorMessage(null))
 			})
 			.catch(err => {
 				console.log(
@@ -120,7 +127,8 @@ function fetchDomainData(args) {
 					+
 					` operation: ${err.message}`
 				)
-				dispatch(args[2](err.message))
+				actionsFailure.every(v => dispatch(v(err.message, paginationId)))
+				dispatch(setErrorMessage(err.message))
 			})
 	}
 }

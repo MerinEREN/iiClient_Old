@@ -4,7 +4,7 @@ import {Link} from 'react-router'
 import FlatButton from 'material-ui/FlatButton'
 import ToDo from "../containers/todo"
 
-const Timeline = ({muiTheme, params, toDos, addNewToDo, removeToDo}) => (
+const Timeline = ({muiTheme, params, items, addNewToDo, removeToDo}) => (
 	<div>
 		{
 			// Test for params
@@ -19,7 +19,7 @@ const Timeline = ({muiTheme, params, toDos, addNewToDo, removeToDo}) => (
 						color: 'black'
 					}}
 				>
-				Navigate to Merin
+					Navigate to Merin
 				</Link>
 		}
 		<FlatButton
@@ -27,7 +27,7 @@ const Timeline = ({muiTheme, params, toDos, addNewToDo, removeToDo}) => (
 			onTouchTap={() => addNewToDo()}
 		/>
 		{/* 
-			toDos.map((toDo, i) => 
+			items.map((toDo, i) => 
 				<ToDo
 					key={i}
 					index={i}
@@ -35,9 +35,9 @@ const Timeline = ({muiTheme, params, toDos, addNewToDo, removeToDo}) => (
 					remove={() => removeToDo(i)}
 				/>
 			)
-		*/}
-		{/*
-			for(const todo of toDos) {
+			*/}
+			{/*
+			for(const todo of items) {
 				return (
 					<ToDo
 						key={todo.id}
@@ -47,30 +47,37 @@ const Timeline = ({muiTheme, params, toDos, addNewToDo, removeToDo}) => (
 					/>
 				)
 			}
-		*/}
-		{
-			Object.keys(toDos).map(function (key) {
-				let todo = toDos[key];
-				return (
-					<ToDo
-						key={todo.id}
-						{...todo}
-						remove={() => removeToDo(todo.id)}
-					/>
-				)
-			})
-		}
-	</div>
+			*/}
+			{
+				/* Object.keys(items).map(function (key) {
+					let todo = items[key];
+					return (
+						<ToDo
+							key={todo.id}
+							{...todo}
+							remove={() => removeToDo(todo.id)}
+						/>
+					)
+				}) */
+			}
+		</div>
 )
 
 Timeline.propTypes = {
 	muiTheme: PropTypes.object.isRequired,
 	params: PropTypes.object.isRequired,
-	toDos: PropTypes.objectOf(PropTypes.shape({
-		id: PropTypes.number.isRequired,
-		children: PropTypes.node.isRequired,
-		editable: PropTypes.bool.isRequired
-	}).isRequired).isRequired,
+	items: PropTypes.objectOf(PropTypes.shape({
+		offers: PropTypes.objectOf(PropTypes.shape({
+			id: PropTypes.number.isRequired, 
+			children: PropTypes.node.isRequired, 
+			editable: PropTypes.bool.isRequired
+		})),
+		demands: PropTypes.objectOf(PropTypes.shape({
+			id: PropTypes.number.isRequired, 
+			children: PropTypes.node.isRequired, 
+			editable: PropTypes.bool.isRequired
+		}))
+	})),
 	addNewToDo: PropTypes.func.isRequired,
 	removeToDo: PropTypes.func.isRequired
 }

@@ -2,7 +2,7 @@ import React, {PropTypes}  from "react"
 import {connect} from 'react-redux'
 import muiThemeable from 'material-ui/styles/muiThemeable'
 import FlatButton from 'material-ui/FlatButton'
-import {save, edit} from '../actions/todos'
+import {save, edit} from '../actions/timeline'
 
 let input
 

@@ -1,13 +1,15 @@
 import {combineReducers} from 'redux'
-import account from './account'
+import accounts from './accounts'
 import users from './users'
-import todosReducer from './todos'
+import offers from './offers'
+import demands from './demands'
 
 // Higher-Order Reducer
 const entities= combineReducers({
-	account,
+	accounts,
 	users,
-	toDos: todosReducer
+	offers,
+	demands
 })
 
 export default entities

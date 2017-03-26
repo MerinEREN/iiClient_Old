@@ -1,4 +1,59 @@
 import {combineReducers} from 'redux'
+import createReducer, {mergeKeysIntoArray} from './utilities'
+import {paginate} from './utilities'
+import {
+	USERS_REQUEST,
+	USERS_SUCCESS,
+	USERS_FAILURE,
+} from '../actions/types'
+
+// Case Reducers
+function mergeById(state, action) {
+	const {result} = action.response
+	if(result.user) 
+		return {...state, ...result.user}
+	return {...state, ...result}
+}
+function pushIds(state, action) {
+	const {result} = action.response
+	if(result.user) 
+		return mergeKeysIntoArray(state, result.user)
+	return mergeKeysIntoArray(state, result)
+}
+
+// Slice Reducers
+const byId = createReducer(
+	{}, 
+	{
+		USER_ACCOUNT_SUCCESS: mergeById, 
+		USERS_SUCCESS: mergeById
+	}
+)
+const allIds = createReducer(
+	[], 
+	{
+		USER_ACCOUNT_SUCCESS: pushIds, 
+		USERS_SUCCESS: pushIds
+	}
+)
+export const usersByAccount = paginate({
+	mapActionToKey: action => action.accountId, 
+	types: [
+		USERS_REQUEST, 
+		USERS_SUCCESS, 
+		USERS_FAILURE
+	]
+})
+
+// Higher-Order Reducer
+const users = combineReducers({
+	byId,
+	allIds
+})
+
+export default users
+
+/* import {combineReducers} from 'redux'
 import createReducer from './utilities'
 import {
 	REQUEST_USERS_DATA,
@@ -58,12 +113,4 @@ const allIds = createReducer(
 	{
 		RECEIVE_USERS_DATA_SUCCESS: pushUser
 	}
-)
-
-// Higher-Order Reducer
-const users = combineReducers({
-	byId,
-	allIds
-})
-
-export default users
+) */

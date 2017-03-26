@@ -109,11 +109,11 @@ const allIds = createReducer(initialAllIdsState, {
 })
 
 // Higher-Order Reducer
-const todosReducer = combineReducers({
+const timelineReducer = combineReducers({
 	byId,
 	allIds
 })
-export default todosReducer
+export default timelineReducer
 
 // RETURN HAS TO HAVE A INITIAL VALUE, OTHERWISE IT THROWS AN ERROR
 /* const ToDo = (state={}, action) => {

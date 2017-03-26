@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch'
 import makeActionCreator from './creator'
 import {ADD_NEW_TODO, EDIT_TODO, REMOVE_TODO, SAVE_TODO} from './types'
 
